@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t kalitamih/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  -  docker run -e CI=true kalitamih/react-test npm test
+
+after_success:
+  - docker build -t kalitamih/multi-client ./client
+  - docker build -t kalitamih/multi-nginx ./nginx
+  - docker build -t kalitamih/multi-server ./server
+  - docker build -t kalitamih/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push kalitamih/multi-client
+  - docker push kalitamih/multi-nginx 
+  - docker push kalitamih/multi-server
+  - docker push kalitamih/multi-worker
+
