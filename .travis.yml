@@ -21,3 +21,17 @@ after_success:
   - docker push kalitamih/multi-server
   - docker push kalitamih/multi-worker
 
+deploy:
+  edge: true
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "multi-docker-1"
+  env: "MultiDocker1-env"
+  bucket_name: "elasticbeanstalk-us-east-2-831964246238"
+  bucket_path: "multi-docker-1"
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  on:
+    branch: master
+
+
